@@ -58,7 +58,7 @@ impl OBSApi {
 
     pub async fn xml_get<'a, T: serde::Deserialize<'a>, S: AsRef<str>>(&self, path: S) -> reqwest::Result<T> {
         let resp = self.get(path).await?;
-        println!("{}", resp);
+        // println!("{}", resp);
         let resp_structure: T = from_str(&resp).unwrap();
         Ok(resp_structure)
     }
@@ -78,7 +78,7 @@ impl OBSApi {
 
     pub async fn xml_get_with_auth<'a, T: serde::Deserialize<'a>, S: AsRef<str>>(&self, path: S) -> reqwest::Result<T> {
         let resp = self.get_with_auth(path).await?;
-        println!("{}", resp);
+        // println!("{}", resp);
         let resp_structure: T = from_str(&resp).unwrap();
         Ok(resp_structure)
     }
@@ -98,6 +98,7 @@ impl OBSApi {
 
     pub async fn xml_post_with_auth<'a, T: serde::Deserialize<'a>, S: AsRef<str>>(&self, path: S) -> reqwest::Result<T> {
         let resp = self.post_with_auth(path).await?;
+        // println!("{}", resp);
         let resp_structure: T = from_str(&resp).unwrap();
         Ok(resp_structure)
     }
