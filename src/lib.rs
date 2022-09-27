@@ -15,22 +15,17 @@ mod tests {
         )
     }
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-
     #[tokio::test]
     async fn main() -> reqwest::Result<()> {
-        let a = obsapi_from_env().about().await?;
-        println!("{:#?}", a);
+        let about = obsapi_from_env().about().await?;
+        // println!("{:#?}", about);
         Ok(())
     }
 
     #[tokio::test]
     async fn about() -> reqwest::Result<()> {
         let _about = obsapi_from_env().about().await?;
+        // println!("{:?}", about);
         Ok(())
     }
 
@@ -52,6 +47,35 @@ mod tests {
     async fn service() -> reqwest::Result<()> {
         let _service = obsapi_from_env().service().await?;
         // println!("{:?}", about);
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn tokens() -> reqwest::Result<()> {
+        let obs = obsapi_from_env();
+        let create_token = obs.create_token(
+            obs.username.as_str(),
+            Some("rust_test_obs_api"),
+            Some("Rust test obs api"),
+            None,
+            None,
+            None,
+            None,
+        ).await.unwrap();
+        let created_token_id = create_token.extra
+            .iter()
+            .find(|d| d.name == "id")
+            .map(|d| d.value.clone())
+            .unwrap()
+            .parse::<u32>()
+            .unwrap();
+        // println!("{:#?}", create_token);
+        let tokens = obs.tokens(&obs.username).await.unwrap();
+        // println!("{:#?}", tokens);
+        let r = obs.delete_token(&obs.username, created_token_id).await.unwrap();
+        // println!("{}", r);
+        let tokens = obs.tokens(&obs.username).await.unwrap();
+        // println!("{:#?}", tokens);
         Ok(())
     }
 }

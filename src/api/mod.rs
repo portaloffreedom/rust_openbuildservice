@@ -2,10 +2,15 @@ use reqwest::header;
 use serde_xml_rs::from_str;
 // use serde_xml_rs::to_string;
 mod general;
+mod build;
+mod configuration;
+mod distributions;
+mod notifications;
+mod person;
 
 pub struct OBSApi {
     endpoint: String,
-    username: String,
+    pub username: String,
     password: String,
     token: String,
 }
@@ -98,6 +103,26 @@ impl OBSApi {
 
     pub async fn xml_post_with_auth<'a, T: serde::Deserialize<'a>, S: AsRef<str>>(&self, path: S) -> reqwest::Result<T> {
         let resp = self.post_with_auth(path).await?;
+        // println!("{}", resp);
+        let resp_structure: T = from_str(&resp).unwrap();
+        Ok(resp_structure)
+    }
+
+    pub async fn delete_with_auth<S: AsRef<str>>(&self, path: S) -> reqwest::Result<String> {
+        reqwest::Client::builder()
+            .build()?
+            .delete(format!("{}{}", self.endpoint, path.as_ref()))
+            .basic_auth(&self.username, Some(&self.password))
+            .header(header::ACCEPT, "application/xml; charset=utf-8")
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await
+    }
+
+    pub async fn xml_delete_with_auth<'a, T: serde::Deserialize<'a>, S: AsRef<str>>(&self, path: S) -> reqwest::Result<T> {
+        let resp = self.delete_with_auth(path).await?;
         // println!("{}", resp);
         let resp_structure: T = from_str(&resp).unwrap();
         Ok(resp_structure)

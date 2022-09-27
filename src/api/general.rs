@@ -18,31 +18,31 @@ pub struct Architectures {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Architecture {
-    name: String,
+    pub name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ServiceList {
-    service: Vec<Service>
+    pub service: Vec<Service>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Service {
-    name: String,
-    summary: String,
-    description: String,
+    pub name: String,
+    pub summary: String,
+    pub description: String,
     #[serde(default, rename="parameter")]
-    parameters: Vec<ServiceParam>,
+    pub parameters: Vec<ServiceParam>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ServiceParam {
-    name: String,
-    description: String,
+    pub name: String,
+    pub description: String,
     #[serde(default)]
-    required: Option<()>,
+    pub required: Option<()>,
     #[serde(default, rename="allowedvalue")]
-    allowed_values: Vec<String>,
+    pub allowed_values: Vec<String>,
 }
 
 impl OBSApi {
