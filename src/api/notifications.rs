@@ -4,24 +4,25 @@ use crate::api::OBSApi;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Notifications {
     pub count: u32,
-    //untested
     #[serde(default)]
     pub total_pages: u32,
     #[serde(default)]
     pub current_page: u32,
-    #[serde(default)]
+    #[serde(default, rename="notification")]
     pub notifications: Vec<Notification>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Notification {
-    //untested
     pub id: u32,
     pub title: String,
     pub who: String,
     pub state: String,
     pub event_type: String,
     pub when: String,
+    pub comment: String,
+    pub description: String,
+    pub request_number: u32,
 }
 
 impl OBSApi {
